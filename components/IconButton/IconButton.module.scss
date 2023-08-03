@@ -1,0 +1,28 @@
+.bgcolor-blue {
+  background-color: #A6CAF7;
+}
+
+.bgcolor-blue:hover {
+  background-color: #90b0d8;
+  cursor: pointer;
+}
+
+.base:active {
+  color: white;
+  background-color: #ffb7b7;
+}
+
+.base {
+  border: none;
+  border-radius: 100px;
+  max-width: 48px;
+  max-height: 48px;
+  width: 100%;
+  height: 100%;
+  font-size: 24px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
