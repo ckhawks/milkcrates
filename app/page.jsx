@@ -11,7 +11,7 @@ import prisma from "../lib/prisma";
 
 import { getCrates } from "../lib/crates";
 
-export const getBottles = async () => {
+const getBottles = async () => {
   const bottles = await prisma.bottle.findMany({
     // where: { published: true },
     include: {
