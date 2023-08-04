@@ -140,6 +140,7 @@ input[type="text"] {
 
 textarea {
   resize: none;
+  box-sizing: border-box;
 }
 
 input, textarea, select {

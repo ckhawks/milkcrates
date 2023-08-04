@@ -1,16 +1,36 @@
-// import { useState } from "react";
 import Link from "next/link";
 
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 import IconButton from "../components/IconButton";
+import FormCreateBottle from "../components/FormCreateBottle";
+import FormCreateCrate from "../components/FormCreateCrate";
 
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import prisma from "../lib/prisma";
 
-export default function Page() {
+import { getCrates } from "../lib/crates";
+
+export const getBottles = async () => {
+  const bottles = await prisma.bottle.findMany({
+    // where: { published: true },
+    include: {
+      crate: {
+        select: { id: true, name: true },
+      },
+    },
+  });
+  return bottles;
+};
+
+// export const createBottle = async (message, crateId) => {
+//
+// };
+
+export default async function Page() {
   // const [crates, setCrates] = useState([]);
-  const crates = [{ name: "crate 1" }, { name: "crate 2" }];
+  const crates = (await getCrates()) || [];
+  console.log("crates", crates);
 
   return (
     <div className={"page"}>
@@ -18,56 +38,21 @@ export default function Page() {
         <Header />
 
         <p>Crates</p>
-        <ul>
-          {crates.map((crate) => {
-            return (
-              <li>
-                <Link href={"crates/" + crate.slug}>{crate.name}</Link>
-              </li>
-            );
-          })}
-        </ul>
+        {crates && (
+          <ul>
+            {crates.map((crate) => {
+              return (
+                <li key={crate.name}>
+                  <Link href={"crates/" + crate.name}>{crate.name}</Link>
+                </li>
+              );
+            })}
+          </ul>
+        )}
+        {crates.length === 0 && <p>No crates found.</p>}
 
-        {/* <!-- Basic HTML Form --> */}
-        <form action="/api/bottle" method="post" className={"submitBottleForm"}>
-          <div className="f-row">
-            <div className="f-col">
-              <label for="crate-select">Crate</label>
-
-              <select
-                name="crates"
-                id="crate-select"
-                style={{ maxWidth: "200px" }}
-              >
-                <option value="random">Random</option>
-                <option value="dog">Dog</option>
-                <option value="cat">Cat</option>
-                <option value="hamster">Hamster</option>
-                <option value="parrot">Parrot</option>
-                <option value="spider">Spider</option>
-                <option value="goldfish">Goldfish</option>
-              </select>
-              {/* <label for="first">First Name</label>
-          <input type="text" id="first" name="first" /> */}
-
-              <label for="bottle-message">Message in the milk bottle</label>
-              <textarea
-                placeholder="What do you want to say?"
-                id="bottle-message"
-                name="bottle-message"
-                rows="5"
-                cols="60"
-                width={"100%"}
-              />
-            </div>
-          </div>
-          <div>
-            <button type="submit" className="btn-default">
-              <span style={{ marginRight: "10px" }}>Send away</span>
-              <FontAwesomeIcon icon={faArrowRight} />
-            </button>
-          </div>
-        </form>
+        <FormCreateBottle crates={crates} />
+        <FormCreateCrate />
         <IconButton icon={faArrowRight} color={"blue"} />
 
         <Footer />
